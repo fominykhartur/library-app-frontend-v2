@@ -1,16 +1,36 @@
 <template>
     <v-container >
       <!-- <v-responsive class="d-flex align-center text-center fill-height"> -->
-        <v-data-table-server
-        v-model:items-per-page="itemsPerPage"
-        :headers="headers"
-        :items-length="totalItems"
-        :items="usersdata"
-        :loading="loading"
-        class="elevation-1"
-        item-value="username"
-        @update:options="getUsersList"
-        ></v-data-table-server>
+        <v-card>
+          <v-card-title>
+          Список книг
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Поиск"
+            single-line
+            hide-details
+          ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="booksdata"
+            :search="search"
+            :loading="loading"
+            @update:options="getBookList"
+            >
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{ item.columns.book_id }}</td>
+                <td>{{ item.columns.book_name }}</td>
+                <td>{{ item.columns.author_name }}</td>
+                <td>{{ item.columns.category_name }}</td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+
       <!-- </v-responsive> -->
     </v-container>
   </template>
@@ -20,30 +40,35 @@
     export default{
       data(){
         return{
+            search: '',
             itemsPerPage: 10,
-            headers:[{key: 'user_id', title: 'ID'},{key: 'username', title: 'Name'}],
-            usersdata: [],
+            headers:[{key: 'book_id', title: 'ID', order: 'asc'},
+                     {key: 'book_name', title: 'Название'},
+                     {key: 'author_name', title: 'Автор'},
+                     {key: 'category_name', title: 'Категория'},
+                    ],
+            booksdata: [],
             loading: true,
             totalItems: 0,
         }
       },
       methods: {
-        getUsersList: function(){
+        getBookList: function(){
             this.loading = true
-            getRequest("http://localhost:9000/library-api/users/getUserList")
+            getRequest("http://localhost:9000/library-api/books/allBooks")
             .then(res=>{
                 console.log(res)
-                this.usersdata = res.data
+                this.booksdata = res.data
                 this.totalItems = res.data.length
                 this.loading = false
             })
         }
       },
       beforeMount(){
-        this.getUsersList()
-    },
+        this.getBookList()
+      },
     mounted(){
-        console.log(this.usersdata)
+        console.log(this.booksdata)
       }
     }
   </script>

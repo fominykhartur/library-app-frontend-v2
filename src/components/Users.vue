@@ -1,16 +1,36 @@
 <template>
     <v-container >
       <!-- <v-responsive class="d-flex align-center text-center fill-height"> -->
-        <v-data-table-server
-        v-model:items-per-page="itemsPerPage"
-        :headers="headers"
-        :items-length="totalItems"
-        :items="usersdata"
-        :loading="loading"
-        class="elevation-1"
-        item-value="username"
-        @update:options="getUsersList"
-        ></v-data-table-server>
+
+      <v-card>
+      <v-card-title>
+        Список пользователей
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Поиск"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+        <v-data-table
+          :headers="headers"
+          :items="usersdata"
+          :search="search"
+          :loading="loading"
+          @update:options="getUsersList"
+          >
+          <template v-slot:item="{ item }">
+            <tr>
+              <td width="10%">{{ item.columns.user_id }}</td>
+              <td>{{ item.columns.username }}</td>
+              <td width="20%"><v-btn @click="$router.push(`users/${item.columns.user_id}`)">Открыть профиль</v-btn></td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-card>
+
       <!-- </v-responsive> -->
     </v-container>
   </template>
@@ -20,8 +40,12 @@
     export default{
       data(){
         return{
+            search: '',
             itemsPerPage: 10,
-            headers:[{key: 'user_id', title: 'ID'},{key: 'username', title: 'Name'}],
+            headers:[{key: 'user_id', title: 'ID'},
+                     {key: 'username', title: 'Имя'},
+                     {title: ''}
+                    ],
             usersdata: [],
             loading: true,
             totalItems: 0,

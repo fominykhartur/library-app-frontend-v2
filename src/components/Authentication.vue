@@ -63,6 +63,8 @@
           postRequest("http://localhost:9000/library-api/auth/login", {"email": this.email,"password": this.password}).then(res=>{
             console.log(res)
             localStorage.setItem("jwt",res.data.jwt)
+            localStorage.setItem("username",res.data.name)
+            localStorage.setItem("id",res.data.id)
           })
         }
       },

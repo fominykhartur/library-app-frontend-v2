@@ -11,7 +11,7 @@ export async function getRequest(url:string) {
 }
 
 export async function postRequest(url:string, body:any){
-    const result = await axios.post(url,body)
+    const result = await axios.post(url,body,config)
 
     return result
 }

@@ -9,7 +9,7 @@
     </v-row>
     <v-spacer></v-spacer>
     <v-row v-if="isAuth">
-        <v-btn to="/:id/books">Мои книги</v-btn> 
+        <v-btn @click="$router.push(`/users/${id}`)">Мои книги</v-btn> 
     </v-row>
     <v-spacer></v-spacer>
     
@@ -27,12 +27,15 @@ export default{
     data(){
         return{
             jwt: localStorage.getItem("jwt"),
+            id: localStorage.getItem("id"),
             isAuth: false,
         }
     },
     methods: {
         logout: function(){
             localStorage.removeItem("jwt")
+            localStorage.removeItem("name")
+            localStorage.removeItem("id")
             this.jwt = ''
             this.isAuth=false
             console.log("Вышел")
@@ -44,6 +47,7 @@ export default{
         }
         window.addEventListener('login', (event:any) => {
             this.jwt = localStorage.getItem("jwt");
+            this.id = localStorage.getItem("id")
             this.isAuth = true
         });
     },

@@ -28,7 +28,7 @@ export default{
         return{
             jwt: localStorage.getItem("jwt"),
             id: localStorage.getItem("id"),
-            isAuth: false,
+            isAuth: localStorage.getItem("jwt")?true:false,
         }
     },
     methods: {
@@ -37,14 +37,12 @@ export default{
             localStorage.removeItem("name")
             localStorage.removeItem("id")
             this.jwt = ''
+            this.id = ''
             this.isAuth=false
             console.log("Вышел")
         },
     },
     mounted(){
-        if(localStorage.getItem("jwt")){
-            this.isAuth = true
-        }
         window.addEventListener('login', (event:any) => {
             this.jwt = localStorage.getItem("jwt");
             this.id = localStorage.getItem("id")

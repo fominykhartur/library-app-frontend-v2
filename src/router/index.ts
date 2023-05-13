@@ -31,7 +31,7 @@ const routes = [
       {
         path: '/users/:id',
         name: 'userProfile',
-        component: () => import('@/views/UserProfile.vue'),
+        component: () => import('@/views/UserProfileBooks.vue'),
       },
       {
         path: '/books',

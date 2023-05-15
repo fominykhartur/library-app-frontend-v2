@@ -38,7 +38,7 @@
       </v-data-table>
     </v-card>
   </v-container>
-  <AddBookDialog v-if="isMy" :userbooks="userbooks" :fetchedBooks="fetchedBooks"></AddBookDialog>
+  <AddBookDialog v-if="isMy" :userbooks="userbooks"></AddBookDialog>
         </template>
   
   <script lang="ts">
@@ -74,7 +74,7 @@
         },
         getUserBooks: function () {
             this.loading = true;
-            postRequest("http://localhost:9000/library-api/users/userBooks", { id: this.$route.params.id })
+            postRequest("http://localhost:9000/library-api/public/userBooks", { id: this.$route.params.id })
                 .then(res => {
                 console.log(res);
                 this.userbooks = res.data;
@@ -109,22 +109,20 @@
                 this.getUserBooks();
             });
         },
-        getAllBooks:function(){
-          getRequest("http://localhost:9000/library-api/books/allBooks")
-          .then(res=>{
-          console.log('newbboks',res.data)
-          this.fetchedBooks=res.data
-    })
-        }
     },
     beforeMount() {
         if (this.isMy) {
             this.headers.push({ key: "status", title: "Статус" });
         }
         console.log(this.isMy);
-        this.getAllBooks();
         this.getUsername();
         this.getUserBooks();
+    },
+    mounted() {
+      window.addEventListener('newBookAdd', () => {
+        console.log("Обновление книг после добавления новой")
+        this.getUserBooks();
+        });
     },
     components: { AddBookDialog }
 }

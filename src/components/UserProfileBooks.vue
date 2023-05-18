@@ -19,11 +19,25 @@
         label="Выбор категории"
         
         ></v-select>
+        <!-- <div class="text-center" v-if="!loading">
+        <v-progress-circular 
+          :size="100"
+          width="10"
+          color="grey"
+          indeterminate
+        ></v-progress-circular>
+          <br>
+          <br>
+        </div> -->
+        <!-- <v-skeleton-loader v-if="!isLoading"></v-skeleton-loader> -->
         <v-data-table
         :headers="headers"
         :items="filteredBooks"
         :search="search"
         :loading="loading"
+        loading-text="Собираем книги"
+        no-data-text="Пустая библиотека"
+        items-per-page-text="Книг на странице"
         @update:menu="getUserBooks"
         >
         <template v-slot:item="{ item }">
@@ -61,11 +75,17 @@
             categories: ["Все"],
             select: "Все",
             fetchedBooks: [],
+            isLoading: false,
         };
+    },
+    computed: {
+      // isLoading:function() {
+      //   return this.userbooks.length > 0
+      // }
     },
     methods: {
         getUsername: function () {
-            postRequest("http://localhost:9000/library-api/public/username", { id: this.$route.params.id })
+            postRequest(`${import.meta.env.VITE_HOST}/library-api/public/username`, { id: this.$route.params.id })
                 .then(res => {
                 console.log(res.data);
                 this.username = res.data[0].username;
@@ -74,15 +94,15 @@
         },
         getUserBooks: function () {
             this.loading = true;
-            postRequest("http://localhost:9000/library-api/public/userBooks", { id: this.$route.params.id })
+            postRequest(`${import.meta.env.VITE_HOST}/library-api/public/userBooks`, { id: this.$route.params.id })
                 .then(res => {
-                console.log(res);
+                console.log('userbooks',res);
                 this.userbooks = res.data;
                 this.totalItems = res.data.length;
                 this.loading = false;
                 // this.select = this.categories[0]
             });
-            postRequest("http://localhost:9000/library-api/public/userCategories", { id: this.$route.params.id })
+            postRequest(`${import.meta.env.VITE_HOST}/library-api/public/userCategories`, { id: this.$route.params.id })
                 .then(res => {
                 this.categories = ["Все", ...res.data.map((item: any) => item.category_name)];
                 console.log("categories", this.categories);
@@ -103,7 +123,7 @@
             console.log("Изменение статуса", id, status, +(!status));
             console.log(this.filteredBooks);
             status = +(!status);
-            postRequest("http://localhost:9000/library-api/users/changeBookStatus", { id, status })
+            postRequest(`${import.meta.env.VITE_HOST}/library-api/users/changeBookStatus`, { id, status })
                 .then(res => {
                 console.log(res);
                 this.getUserBooks();

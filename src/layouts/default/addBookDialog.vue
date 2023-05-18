@@ -16,13 +16,13 @@
           <v-card-title>
             <span class="text-h5">Добавление новой книги</span>
           </v-card-title>
-          <v-card-text>
+          <!-- <v-card-text> -->
             <v-container>
               <v-row>
                 <v-col
                   cols="10"
                   sm="6"
-                  md="4"
+                  md="6"
                   lg="3"
                 >
                   <v-combobox
@@ -37,26 +37,28 @@
                 <v-col
                   cols="10"
                   sm="6"
-                  md="4"
+                  md="6"
                   lg="3"
                 >
                   <v-combobox
                     label="Автор"
                     v-model="inputAuthor"
-                    :items="newBooksAuthors"
+                    :items="allAuthors"
+                    @click="getAuthors"
                     :readonly="inputAuthorDisable"
                   ></v-combobox>
                 </v-col>
                 <v-col
                   cols="10"
                   sm="6"
-                  md="4"
+                  md="6"
                   lg="3"
                 >
                   <v-combobox
                     label="Категория"
                     v-model="inputCategory"
-                    :items="newBooksCategories"
+                    :items="allCategories"
+                    @click="getCategories"
                     :readonly="inputCategoryDisable"
                     required
                   ></v-combobox>
@@ -64,7 +66,7 @@
                 <v-col
                   cols="10"
                   sm="6"
-                  md="4"
+                  md="6"
                   lg="3"
                 >
                   <v-autocomplete
@@ -76,8 +78,7 @@
                 </v-col>
               </v-row>
             </v-container>
-            <small>*indicates required field</small>
-          </v-card-text>
+          <!-- </v-card-text> -->
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
@@ -90,6 +91,7 @@
             <v-btn 
               color="blue-darken-1"
               variant="text"
+              :disabled="isAddButtonDisabled"
               @click="addBookToUser"
             >
               Добавить
@@ -115,11 +117,19 @@ export default {
     inputAuthorDisable: false,
     inputCategory: '',
     inputCategoryDisable: false,
-    inputStatus: "Не прочитано"
+    inputStatus: "Не прочитано",
+    allCategories: [],
+    allAuthors: [],
+    addButtonDisabled: true,
   }),
   beforeMount(){
+    this.getAuthors()
+    this.getCategories()
   },
-  mounted(){
+  computed:{
+    isAddButtonDisabled: function(){
+      return !(this.inputName && this.inputAuthor && this.inputCategory)
+    }
   },
   methods: {
     searchPreparedBook: function(){
@@ -133,7 +143,7 @@ export default {
     }
     },
     getAllBooks: function(){
-      getRequest("http://localhost:9000/library-api/public/allBooks")
+      getRequest(`${import.meta.env.VITE_HOST}/library-api/public/allBooks`)
       .then(res=>{
       // this.newBooks=res.data
       this.removeUserBooks(res.data)
@@ -148,8 +158,6 @@ export default {
     this.newBooksNames = Array.from(this.newBooks.map((item:any)=>item.book_name))
     this.newBooksAuthors = Array.from(new Set(this.newBooks.map((item:any)=>item.author_name)))
     this.newBooksCategories = Array.from(new Set(this.newBooks.map((item:any)=>item.category_name)))
-    console.log(this.newBooks,"qwe")
-    console.log(this.newBooksNames, this.newBooksAuthors, this.newBooksCategories)
     },
     closeDialog: function(){
       this.dialog = false
@@ -158,20 +166,29 @@ export default {
       this.inputCategory=""
     },
     addBookToUser: function(){
-      console.log(this.inputName,this.inputAuthor,this.inputCategory)
-      console.log(this.inputStatus==="Прочитано"?1:0)
-      postRequest("http://localhost:9000/library-api/users/addNewBook",{bookName:this.inputName,
+      postRequest(`${import.meta.env.VITE_HOST}/library-api/users/addNewBook`,{bookName:this.inputName,
                                                                         authorName:this.inputAuthor,
                                                                         categoryName:this.inputCategory,
                                                                         status: this.inputStatus==="Прочитано"?1:0})
       .then((res)=>{
-        console.log("Результат добавлегни")
-        console.log(res)
         this.inputName=""
         this.inputAuthor=""
         this.inputCategory=""
+        this.addButtonDisabled=true
         window.dispatchEvent(new CustomEvent("newBookAdd"))
         this.getAllBooks()
+      })
+    },
+    getCategories: function(){
+      getRequest(`${import.meta.env.VITE_HOST}/library-api/books/categories`)
+      .then(res=>{
+        this.allCategories=res.data.map((item:any)=>item.category_name)
+      })
+    },
+    getAuthors: function(){
+      getRequest(`${import.meta.env.VITE_HOST}/library-api/books/authors`)
+      .then(res=>{
+        this.allAuthors=res.data.map((item:any)=>item.author_name)
       })
     }
 },

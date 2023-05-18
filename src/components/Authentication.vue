@@ -58,7 +58,8 @@
       methods: {
         login:function(username:string,password:string){
           console.log(username,password)
-          postRequest("http://localhost:9000/library-api/auth/login", {"email": this.email,"password": this.password}).then(res=>{
+          console.log(`${import.meta.env.VITE_HOST}/library-api/auth/login`)
+          postRequest(`${import.meta.env.VITE_HOST}/library-api/auth/login`, {"email": this.email,"password": this.password}).then(res=>{
             console.log(res)
             localStorage.setItem("jwt",res.data.jwt)
             localStorage.setItem("username",res.data.name)
@@ -68,6 +69,7 @@
         }
       },
       mounted(){
+        console.log(import.meta.env.VITE_HOST)
       }
     }
   </script>

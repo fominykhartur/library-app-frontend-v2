@@ -54,7 +54,7 @@
       methods: {
         getUsersList: function(){
             this.loading = true
-            getRequest("http://localhost:9000/library-api/public/getUserList")
+            getRequest(`${import.meta.env.VITE_HOST}/library-api/public/getUserList`)
             .then(res=>{
                 console.log(res)
                 this.usersdata = res.data

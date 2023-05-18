@@ -55,7 +55,7 @@
       methods: {
         getBookList: function(){
             this.loading = true
-            getRequest("http://localhost:9000/library-api/public/allBooks")
+            getRequest(`${import.meta.env.VITE_HOST}/library-api/public/allBooks`)
             .then(res=>{
                 console.log(res)
                 this.booksdata = res.data

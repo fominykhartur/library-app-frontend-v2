@@ -3,13 +3,16 @@
     <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
     <v-toolbar-title>LibraryApp</v-toolbar-title>
-    <v-row>
+    <v-spacer></v-spacer>
+    <v-row justify="start">
         <v-btn to="/users">Пользователи</v-btn>
         <v-btn to="/books">Книги</v-btn>
     </v-row>
     <v-spacer></v-spacer>
-    <v-row v-if="isAuth">
-        <v-btn @click="$router.push(`/users/${id}`)">Мои книги</v-btn> 
+    <v-row v-if="isAuth" justify="end">
+        <v-btn @click="$router.push(`/users/${id}`)">Мои книги</v-btn>
+        <v-btn @click="$router.push(`/profile`)">Профиль</v-btn>
+
     </v-row>
     <v-spacer></v-spacer>
     

@@ -5,12 +5,9 @@
 
       Based Preset
     </v-app-bar-title>
-    
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-  //
- 
+//
 </script>
-

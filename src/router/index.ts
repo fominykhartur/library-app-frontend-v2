@@ -1,50 +1,58 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    path: '',
-    name: 'toolBar',
-    component: () => import('@/layouts/default/Default.vue'),
+    path: "/",
+    name: "toolBar",
+    component: () => import("@/layouts/default/Default.vue"),
     children: [
       {
-        path: '',
-        name: 'Home',
+        path: "/",
+        name: "Home",
+        //
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        component: () =>
+          import(/* webpackChunkName: "Home" */ "@/views/Home.vue"),
       },
       {
-        path: '/auth',
-        name: 'Authentication',
+        path: "/auth",
+        name: "Authentication",
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Auth.vue'),
+        component: () =>
+          import(/* webpackChunkName: "Authentication" */ "@/views/Auth.vue"),
       },
       {
-        path: '/users',
-        name: 'users',
-        component: () => import('@/views/Users.vue'),
+        path: "/users",
+        name: "users",
+        component: () =>
+          import(/* webpackChunkName: "users" */ "@/views/Users.vue"),
       },
       {
-        path: '/users/:id',
-        name: 'userProfile',
-        component: () => import('@/views/UserProfileBooks.vue'),
+        path: "/users/:id",
+        name: "userProfile",
+        component: () =>
+          import(
+            /* webpackChunkName: "userProfile" */ "@/views/UserProfileBooks.vue"
+          ),
       },
       {
-        path: '/books',
-        name: 'books',
-        component: () => import('@/views/Books.vue')
-      }
+        path: "/books",
+        name: "books",
+        component: () =>
+          import(/* webpackChunkName: "books" */ "@/views/Books.vue"),
+      },
     ],
   },
-]
+];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
-})
+});
 
-export default router
+export default router;

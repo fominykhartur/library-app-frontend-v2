@@ -8,7 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-  import ToolBar from './ToolBar.vue';
-  import DefaultBar from './AppBar.vue'
-  import DefaultView from './View.vue'
+import ToolBar from "./ToolBar.vue";
+import DefaultView from "./View.vue";
 </script>
